@@ -5,9 +5,9 @@ function Menu() {
     return (
         <aside className="relative w-1/4 bg-white p-5">
             <button className="w-full mb-4 p-3 rounded-md bg-color2">
-                <a>
+                <Link to="/usuario">
                     <span className="btm-nav-label">Informacion Usuario</span>
-                </a>
+                </Link>
             </button>
             <button className="w-full mb-4 p-3 rounded-md bg-color2">
                 <Link to="productos">
@@ -15,9 +15,9 @@ function Menu() {
                 </Link>
             </button>
             <button className="w-full mb-4 p-3 rounded-md bg-color2">
-                <a>
+                <Link to="/transacciones">
                     <span className="btm-nav-label">Historial transacciones</span>
-                </a>
+                </Link>
             </button>
 
             <div className="absolute w-full mb-4 p-3 bottom-0 left-0">
