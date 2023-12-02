@@ -11,7 +11,7 @@ app.use(express.json());
 const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    // Aqui va la contraseña de tu mysql
+    // Aquí va la contraseña de tu mysql
     password: '',
     database: 'bd_proyecto_tienda',
 });

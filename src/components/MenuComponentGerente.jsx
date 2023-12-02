@@ -8,7 +8,7 @@ function Menu() {
                 Información usuario
             </div>
             <div className="mb-4 p-3 bg-color2">
-                <Link to="/products">Productos existentes</Link>
+                <Link to="productos">Productos existentes</Link>
             </div>
             <div className="mb-4 p-3 bg-color2">
                 Historial de transacciones
