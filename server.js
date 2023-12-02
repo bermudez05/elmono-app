@@ -12,7 +12,7 @@ const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     // Aqui va la contraseña de tu mysql
-    password: '4Br6gyp63P27',
+    password: '',
     database: 'bd_proyecto_tienda',
 });
 
@@ -30,17 +30,6 @@ app.listen(port, () => {
 });
 
 // Consultar una vista
-app.get('/api/clientesNombre', (req, res) => {
-    db_elmono.query('SELECT * FROM ClintesNombre', (err, results) => {
-        if (err) {
-            console.error('Error al consultar la vista:', err);
-            res.status(500).json({error: 'Error al consultar la vista'});
-        } else {
-            res.json(results);
-        }
-    });
-});
-
 app.get("/api/productos", (req, res) => {
     db_elmono.query('SELECT * FROM vw_productos_existentes', (err, results) => {
         if (err) {
