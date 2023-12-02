@@ -12,7 +12,7 @@ const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     // Aquí va la contraseña de tu mysql
-    password: 'BiteMe_2002',
+    password: '4Br6gyp63P27',
     database: 'bd_proyecto_tienda',
 });
 
@@ -37,6 +37,60 @@ app.get("/api/productos", (req, res) => {
             res.status(500).json({error: 'Error al consultar la vista'});
         } else {
             res.json(results);
+        }
+    });
+});
+
+
+app.get("/api/facturasventas", (req, res) => {
+    db_elmono.query('SELECT\n' +
+        '    CLIENTE_id_numero_identificacion,\n' +
+        '    fac_ven_fecha,\n' +
+        '    Id_FacturaVenta,\n' +
+        '    fac_ven_total_pago,\n' +
+        '    fac_ven_metodo_pago,\n' +
+        '    fac_ven_descripcion,\n' +
+        '    fac_ven_modo_entrega,\n' +
+        '    fac_ven_estado_entrega,\n' +
+        '    CONCAT_WS(\' \', cli_nombre, cli_apellido) AS nombre_cliente,\n' +
+        '    cli_telefono,\n' +
+        '    cli_tipo_identificacion,\n' +
+        '    SUM(det_cantidad) AS total_cantidad\n' +
+        'FROM\n' +
+        '    vw_facturas_ventas_registradas\n' +
+        'GROUP BY\n' +
+        '    CLIENTE_id_numero_identificacion,\n' +
+        '    fac_ven_fecha,\n' +
+        '    Id_FacturaVenta,\n' +
+        '    fac_ven_total_pago,\n' +
+        '    fac_ven_metodo_pago,\n' +
+        '    fac_ven_descripcion,\n' +
+        '    fac_ven_modo_entrega,\n' +
+        '    fac_ven_estado_entrega,\n' +
+        '    CONCAT_WS(\' \', cli_nombre, cli_apellido),\n' +
+        '    cli_telefono,\n' +
+        '    cli_tipo_identificacion;', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+
+// Ejecutar un procedimiento almacenado
+app.put('/api/updateDeliveryStatus/:facturaId', (req, res) => {
+
+    const facturaId = req.params.facturaId;
+
+    db_elmono.query('CALL sp_ActualizarEstadoEntregaVenta(?)', [facturaId], (err, results) => {
+        if (err) {
+            console.error('Error al ejecutar el procedimiento para actualizar:', err);
+            res.status(500).json({error: 'Error al ejecutar el procedimiento para actualizar'});
+        } else {
+            res.json({message: 'Estado de entrega actualizado correctamente'});
         }
     });
 });
