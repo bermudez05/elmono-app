@@ -12,19 +12,42 @@ const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     // Aqui va la contraseña de tu mysql
-    password: '',
+    password: '4Br6gyp63P27',
     database: 'bd_proyecto_tienda',
 });
 
-db_elmono.connect((err)=>{
-    if (err){
+db_elmono.connect((err) => {
+    if (err) {
         console.error('Error al conectar a Mysql:', err);
-    }else{
+    } else {
         console.log('Conexion a Mysql establecida');
     }
 });
 
 // Define tu ruta y endpoints aqui
-app.listen(port,() => {
-    console.log('Servidor express escuchando en el puerto ${port}')
+app.listen(port, () => {
+    console.log(`Servidor express escuchando en el puerto ${port}`)
+});
+
+// Consultar una vista
+app.get('/api/clientesNombre', (req, res) => {
+    db_elmono.query('SELECT * FROM ClintesNombre', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista:', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.get("/api/productos", (req, res) => {
+    db_elmono.query('SELECT * FROM vw_productos_existentes', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
 });
