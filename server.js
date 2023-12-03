@@ -41,6 +41,27 @@ app.get("/api/productos", (req, res) => {
     });
 });
 
+app.get("/api/productosfactura", (req, res) => {
+    db_elmono.query('select Id_ProductoTienda, pro_nombre, pro_precio_Unitario from vw_productos_existentes group by Id_ProductoTienda;', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.get("/api/clientes", (req, res) => {
+    db_elmono.query('SELECT id_numero_identificacion FROM vw_clientes_registrados;', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
 // Consultar una vista
 app.get("/api/sucursal1", (req, res) => {
     db_elmono.query('SELECT * FROM vw_info_sucursal_1', (err, results) => {
