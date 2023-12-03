@@ -22,7 +22,9 @@ function Menu() {
 
             <div className="absolute w-full mb-4 p-3 bottom-0 left-0">
                 <button className="w-full border-1 rounded-md text-black bg-opacity-60 bg-color1 mb-4 px-5 py-3 hover:bg-color1 hover:text-white">
-                    <span className="btm-nav-label">Registrar gasto</span>
+                    <Link to="registrogasto">
+                        <span className="btm-nav-label">Registrar gasto</span>
+                    </Link>
                 </button>
                 <button className="w-full border-1 rounded-md text-black bg-opacity-60 bg-color1 mb-4 px-5 py-3 hover:bg-color1 hover:text-white">
                     <span className="btm-nav-label">Registrar compra</span>

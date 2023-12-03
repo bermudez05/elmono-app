@@ -41,6 +41,17 @@ app.get("/api/productos", (req, res) => {
     });
 });
 
+// Consultar una vista
+app.get("/api/sucursal1", (req, res) => {
+    db_elmono.query('SELECT * FROM vw_info_sucursal_1', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
 
 app.get("/api/facturasventas", (req, res) => {
     db_elmono.query('SELECT\n' +

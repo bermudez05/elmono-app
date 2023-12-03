@@ -1,15 +1,16 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-function ProductsView() {
+function RegistroGasto() {
 
-    const [productos, setProductos] = useState([])
+    const [sucursal1, setSucursal1] = useState([])
 
     useEffect(() => {
         // Realiza una solicitud GET al servidor para obtener datos
-        axios.get('http://localhost:3001/api/productos')
+        axios.get('http://localhost:3001/api/sucursal1')
             .then((response) => {
-                setProductos(response.data);
+                setSucursal1(response.data);
                 console.log(response.data);
             })
             .catch((error) => {
@@ -17,34 +18,19 @@ function ProductsView() {
             });
     }, []);
 
-    return (
-        <div className="w-3/4 p-5 overflow-y-auto">
-            <table className="min-w-full divide-y divide-color2">
-                <thead className="bg-color2 text-gray-500 text-sm">
-                <tr>
-                    <th className="py-5 text-center rtl:text-right">ID producto</th>
-                    <th className="py-5 text-center rtl:text-right">ID sucursal</th>
-                    <th className="py-5 text-center rtl:text-right">Nombre producto</th>
-                    <th className="py-5 text-center rtl:text-right">Precio unitario</th>
-                    <th className="py-5 text-center rtl:text-right">Cantidad</th>
-                    <th className="py-5 text-center rtl:text-right">Descripción</th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-100 text-sm">
-                {productos.map((producto) => (
-                    <tr key={producto.Id_ProductoTienda}>
-                        <td className="py-3 whitespace-nowrap text-center ">{producto.Id_ProductoTienda}</td>
-                        <td className="py-3 whitespace-nowrap text-center ">{producto.SUCURSAL_Id_Sucursal}</td>
-                        <td className="py-3 whitespace-nowrap text-center ">{producto.pro_nombre}</td>
-                        <td className="py-3 whitespace-nowrap text-center ">${producto.pro_precio_Unitario}</td>
-                        <td className="py-3 whitespace-nowrap text-center ">{producto.lot_cantidad}</td>
-                        <td className="py-3 whitespace-nowrap text-center ">{producto.pro_descripcion}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+    return(
+        <div className="flex w-3/4 h-full items-center justify-center bg-color1">
+            <div className="flex flex-col w-4/6 h-5/6 rounded-md bg-color2 bg-opacity-60">
+            <h3 className="text-center text-base font-bold">Distribuidora de huevos el mono</h3>
+            {sucursal1.map((sucursal) => (
+                <div key={sucursal.Id_Sucursal}>
+                    <p className="text-center text-base font-bold">{sucursal.suc_direccion},{sucursal.suc_ciudad} - {sucursal.suc_nombre}</p>
+                    <p className="text-center text-base font-bold">{sucursal.suc_correo} - {sucursal.suc_telefono}</p>
+                </div>
+            ))}
+            </div>
         </div>
-    )
+    );
 }
 
-export default ProductsView;
+export default RegistroGasto;
