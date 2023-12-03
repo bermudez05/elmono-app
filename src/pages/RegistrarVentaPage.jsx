@@ -73,7 +73,7 @@ const RegistrarVenta = () => {
 
     return (
         <div className="flex justify-center w-3/4 p-5 overflow-y-auto">
-            <div className="flex flex-col overflow-y-auto w-3/4 bg-gray-200 shadow-2xl rounded-md p-5">
+            <div className="flex flex-col overflow-y-auto w-3/4 bg-color2 bg-opacity-60 rounded-md p-5">
                 <div className="flex flex-col justify-center items-center">
                     <h1 className="text-xl font-bold">Distribuidor de Huevos del Mono</h1>
                     <h1 className="text-base font-semibold">Dirección Sucursal #a-b, nombre sede</h1>
