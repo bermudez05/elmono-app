@@ -18,7 +18,7 @@ function ProductsView() {
     }, []);
 
     return (
-        <div className="w-3/4 p-5">
+        <div className="w-3/4 p-5 overflow-y-auto">
             <table className="min-w-full divide-y divide-color2">
                 <thead className="bg-color2 text-gray-500 text-sm">
                 <tr>

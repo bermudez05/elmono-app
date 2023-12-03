@@ -6,6 +6,7 @@ import React from "react";
 import ProductsView from "./pages/ProductsPages";
 import TenderoPage from "./pages/TenderoPage";
 import FacturasView from "./pages/FacturasPage";
+import RegistrarVenta from "./pages/RegistrarVentaPage";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                     <Route path="/tendero" element={<TenderoPage/>}>
                         <Route path={"productos"} element={<ProductsView/>}/>
                         <Route path={"facturasventas"} element={<FacturasView/>}/>
+                        <Route path={"registrarventas"} element={<RegistrarVenta/>}/>
                     </Route>
                 </Routes>
             </div>
