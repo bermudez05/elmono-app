@@ -37,8 +37,8 @@ const RegistrarVenta = () => {
     const handleAddProduct = (values, setValues) => {
         const newProduct = {
             idProducto: '',
-            cantidad: '',
-            precioUnitario: '',
+            cantidad: 0,
+            precioUnitario: 0,
             precioTotal: 0
         };
 
@@ -52,24 +52,6 @@ const RegistrarVenta = () => {
         console.log('Form submit values:', values)
     };
 
-    const handleProductChange = (values, setValues, index) => {
-        const cantidad = values.productosform[index].cantidad;
-        const precioUnitario = values.productosform[index].precioUnitario;
-
-        // Calcula el precio total del producto
-        const precioTotal = cantidad * precioUnitario;
-
-        // Actualiza el estado con el nuevo precio total del producto
-        setValues((prevState) => {
-            const updatedProducts = [...prevState.productosform];
-            updatedProducts[index] = {...updatedProducts[index], precioTotal};
-            const totalGeneral = updatedProducts.reduce(
-                (total, product) => total + (product.precioTotal || 0),
-                0
-            );
-            return {...prevState, productosform: updatedProducts, fac_ven_total_pago: totalGeneral};
-        });
-    };
 
     return (
         <div className="flex justify-center w-3/4 p-5 overflow-y-auto">
@@ -99,14 +81,14 @@ const RegistrarVenta = () => {
                         fac_ven_total_pago: 0,
                         productosform: [{
                             idProducto: '',
-                            cantidad: '',
-                            precioUnitario: '',
+                            cantidad: 0,
+                            precioUnitario: 0,
                             precioTotal: 0
                         }],
                     }}
                     onSubmit={handleSubmitRegistrar}
                 >
-                    {({values, setValues, setFieldValue}) => (
+                    {({values, setValues}) => (
                         <Form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
                             <div className="col-span-2">
                                 <label className="block mb-2 text-base text-black font-semibold">Seleccionar Cliente
@@ -242,9 +224,6 @@ const RegistrarVenta = () => {
                                             id={`productosform.${index}.cantidad`}
                                             name={`productosform.${index}.cantidad`}
                                             className="w-full p-2 border border-gray-300 rounded"
-                                            onChange={(e) => {
-                                                setFieldValue(`productosform.${index}.cantidad`, e.target.value);
-                                            }}
                                         />
                                     </div>
                                     <div>
@@ -257,21 +236,18 @@ const RegistrarVenta = () => {
                                             id={`productosform.${index}.precioUnitario`}
                                             name={`productosform.${index}.precioUnitario`}
                                             className="w-full p-2 border border-gray-300 rounded"
-                                            onChange={(e) => {
-                                                setFieldValue(`productosform.${index}.precioUnitario`, e.target.value);
-                                            }}
                                         />
                                     </div>
                                     <div>
                                         <label htmlFor={`productosform.${index}.precioTotal`}
-                                               className="block text-sm font-semibold mb-2">
+                                               className="block mb-2 text-base text-black font-semibold">
                                             Precio Total:
                                         </label>
                                         <Field
                                             type="text"
                                             id={`productosform.${index}.precioTotal`}
                                             name={`productosform.${index}.precioTotal`}
-                                            value={product.precioTotal}
+                                            value={product.cantidad * product.precioUnitario}
                                             className="w-full p-2 border border-gray-300 rounded"
                                             readOnly
                                         />
@@ -352,7 +328,7 @@ const RegistrarVenta = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 col-span-1 col-start-2">
                                 <label htmlFor="fac_ven_total_pago" className="block text-sm font-semibold mb-2">
                                     Total General:
                                 </label>
@@ -360,7 +336,7 @@ const RegistrarVenta = () => {
                                     type="text"
                                     id="fac_ven_total_pago"
                                     name="fac_ven_total_pago"
-                                    value={values.fac_ven_total_pago}
+                                    value={values.productosform.reduce((total, product) => total + (product.cantidad * product.precioUnitario), 0)}
                                     className="w-full p-2 border border-gray-300 rounded"
                                     readOnly
                                 />
