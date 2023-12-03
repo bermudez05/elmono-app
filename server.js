@@ -12,7 +12,7 @@ const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     // Aquí va la contraseña de tu mysql
-    password: '4Br6gyp63P27',
+    password: 'BiteMe_2002',
     database: 'bd_proyecto_tienda',
 });
 
