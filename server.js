@@ -149,7 +149,7 @@ app.post('/api/registrarFacturaVenta', async (req, res) => {
         } else if (nuevo_cliente.id_numero_identificacion) {
             // Registrar el nuevo cliente y obtener su ID
             const clienteResults = await registrarNuevoCliente(nuevo_cliente);
-            clienteId = clienteResults.insertId;
+            clienteId = nuevo_cliente.id_numero_identificacion;
         }
 
         // Registrar la factura y obtener su ID

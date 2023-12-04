@@ -154,6 +154,7 @@ const RegistrarVenta = () => {
                                         placeholder="xxxxxxxxxx"
                                         className="block w-1/4 px-2 py-3 mt-2 mr-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     >
+                                        <option value="">-- Identificación --</option>
                                         <option value="CC">CC</option>
                                         <option value="NIT">NIT</option>
                                         <option value="TI">TI</option>
@@ -177,6 +178,19 @@ const RegistrarVenta = () => {
                                         id="nuevo_cliente.cli_telefono"
                                         name="nuevo_cliente.cli_telefono"
                                         placeholder="320XXXXXXX"
+                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <label className="block mb-2 text-base text-black font-semibold">Dirección</label>
+                                    <Field
+                                        type="text"
+                                        id="nuevo_cliente.cli_direccion"
+                                        name="nuevo_cliente.cli_direccion"
+                                        placeholder=""
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     />
                                 </div>
