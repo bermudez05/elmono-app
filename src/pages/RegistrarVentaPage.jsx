@@ -59,24 +59,6 @@ const RegistrarVenta = () => {
             });
     };
 
-    const handleProductChange = (values, setValues, index) => {
-        const cantidad = values.productosform[index].cantidad;
-        const precioUnitario = values.productosform[index].precioUnitario;
-
-        // Calcula el precio total del producto
-        const precioTotal = cantidad * precioUnitario;
-
-        // Actualiza el estado con el nuevo precio total del producto
-        setValues((prevState) => {
-            const updatedProducts = [...prevState.productosform];
-            updatedProducts[index] = {...updatedProducts[index], precioTotal};
-            const totalGeneral = updatedProducts.reduce(
-                (total, product) => total + (product.precioTotal || 0),
-                0
-            );
-            return {...prevState, productosform: updatedProducts, fac_ven_total_pago: totalGeneral};
-        });
-    };
 
     return (
         <div className="flex justify-center w-3/4 p-5 overflow-y-auto">
@@ -106,8 +88,8 @@ const RegistrarVenta = () => {
                         fac_ven_total_pago: 0,
                         productosform: [{
                             idProducto: '',
-                            cantidad: '',
-                            precioUnitario: '',
+                            cantidad: 0,
+                            precioUnitario: 0,
                             precioTotal: 0
                         }],
                     }}
@@ -172,7 +154,7 @@ const RegistrarVenta = () => {
                                         placeholder="xxxxxxxxxx"
                                         className="block w-1/4 px-2 py-3 mt-2 mr-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     >
-                                        <option value="">-- Identificación --</option>
+                                        <option value="">--</option>
                                         <option value="CC">CC</option>
                                         <option value="NIT">NIT</option>
                                         <option value="TI">TI</option>
@@ -245,7 +227,7 @@ const RegistrarVenta = () => {
                                             name={`productosform.${index}.idProducto`}
                                             className="w-full p-2 border border-gray-300 rounded"
                                         >
-                                            <option value="">-- Seleccione el Producto --</option>
+                                            <option value="">-- Producto --</option>
                                             {productos?.map((producto, index) => (
                                                 <option key={index}
                                                         value={producto.Id_ProductoTienda}>{producto.pro_nombre}</option>
@@ -283,16 +265,16 @@ const RegistrarVenta = () => {
                                             }}
                                         />
                                     </div>
-                                    <div>
+                                    <div className="ml-2">
                                         <label htmlFor={`productosform.${index}.precioTotal`}
-                                               className="block text-sm font-semibold mb-2">
+                                               className="block mb-2 text-base text-black font-semibold">
                                             Precio Total:
                                         </label>
                                         <Field
                                             type="text"
                                             id={`productosform.${index}.precioTotal`}
                                             name={`productosform.${index}.precioTotal`}
-                                            value={product.precioTotal}
+                                            value={product.cantidad * product.precioUnitario}
                                             className="w-full p-2 border border-gray-300 rounded"
                                             readOnly
                                         />
@@ -305,7 +287,7 @@ const RegistrarVenta = () => {
                             {/* Botón para agregar un nuevo producto */}
                             <button
                                 type="button"
-                                className="flex border-2 border-gray-200 items-center justify-between w-2/3 px-6 py-3 text-base tracking-wide text-black capitalize transition-colors duration-300 transform bg-color1 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                                className="flex items-center justify-between w-2/3 px-6 py-3 text-base tracking-wide text-black capitalize transition-colors duration-300 transform bg-color1 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                                 onClick={() => handleAddProduct(values, setValues)}
                             >
                                 Agregar Producto
@@ -355,6 +337,7 @@ const RegistrarVenta = () => {
                                         name="fac_ven_estado_entrega"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     >
+                                        <option value="">--</option>
                                         <option value="1">Si</option>
                                         <option value="0">No</option>
                                     </Field>
@@ -373,7 +356,7 @@ const RegistrarVenta = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 col-start-2">
                                 <label htmlFor="fac_ven_total_pago" className="block text-sm font-semibold mb-2">
                                     Total General:
                                 </label>
@@ -381,7 +364,7 @@ const RegistrarVenta = () => {
                                     type="text"
                                     id="fac_ven_total_pago"
                                     name="fac_ven_total_pago"
-                                    value={values.fac_ven_total_pago}
+                                    value={values.productosform.reduce((total, product) => total + (product.cantidad * product.precioUnitario), 0)}
                                     className="w-full p-2 border border-gray-300 rounded"
                                     readOnly
                                 />
@@ -389,7 +372,7 @@ const RegistrarVenta = () => {
 
                             <button
                                 type="submit"
-                                className="flex border-2 border-gray-200 items-center justify-between w-2/3 px-5 py-3 text-base tracking-wide text-black capitalize bg-color1 rounded-lg focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                                className="flex items-center justify-between w-2/3 px-5 py-3 text-base tracking-wide text-black capitalize bg-color1 rounded-lg focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                                 <span>Registrar Venta</span>
                             </button>
                         </Form>

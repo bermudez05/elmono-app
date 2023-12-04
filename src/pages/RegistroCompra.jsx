@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field} from 'formik';
 
 function RegistroCompra() {
 
@@ -60,25 +60,6 @@ function RegistroCompra() {
 
     const handleSubmitRegistrar = (values) => {
         console.log('Form submit values:', values)
-    };
-
-    const handleProductChange = (values, setValues, index) => {
-        const cantidad = values.productosform[index].cantidad;
-        const precioUnitario = values.productosform[index].precioUnitario;
-
-        // Calcula el precio total del producto
-        const precioTotal = cantidad * precioUnitario;
-
-        // Actualiza el estado con el nuevo precio total del producto
-        setValues((prevState) => {
-            const updatedProducts = [...prevState.productosform];
-            updatedProducts[index] = {...updatedProducts[index], precioTotal};
-            const totalGeneral = updatedProducts.reduce(
-                (total, product) => total + (product.precioTotal || 0),
-                0
-            );
-            return {...prevState, productosform: updatedProducts, fac_ven_total_pago: totalGeneral};
-        });
     };
 
     return(
