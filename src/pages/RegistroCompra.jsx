@@ -1,18 +1,28 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Field, Form, Formik} from "formik";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-const RegistrarVenta = () => {
+function RegistroCompra() {
 
-    const [clientes, setClientes] = useState([]);
+    const [sucursal1, setSucursal1] = useState([])
+    const [proveedor, setProveedor] = useState([]);
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/clientes')
+        // Realiza una solicitud GET al servidor para obtener datos
+        axios.get('http://localhost:3001/api/sucursal1')
             .then((response) => {
-                setClientes(response.data);
+                setSucursal1(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener datos:', error);
+            });
+        axios.get('http://localhost:3001/api/proveedor')
+            .then((response) => {
+                setProveedor(response.data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -49,14 +59,7 @@ const RegistrarVenta = () => {
     };
 
     const handleSubmitRegistrar = (values) => {
-        console.log('Form submit values:', values);
-        axios.post('http://localhost:3001/api/registrarFacturaVenta', values)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error al registrar la factura:', error);
-            });
+        console.log('Form submit values:', values)
     };
 
     const handleProductChange = (values, setValues, index) => {
@@ -78,32 +81,30 @@ const RegistrarVenta = () => {
         });
     };
 
-    return (
-        <div className="flex justify-center w-3/4 p-5 overflow-y-auto">
-            <div className="flex flex-col overflow-y-auto w-3/4 bg-color2 bg-opacity-60 rounded-md p-5">
-                <div className="flex flex-col justify-center items-center">
-                    <h1 className="text-xl font-bold">Distribuidor de Huevos del Mono</h1>
-                    <h1 className="text-base font-semibold">Dirección Sucursal #a-b, nombre sede</h1>
-                    <h1 className="text-base font-semibold">elmono@email.com</h1>
-                    <h1 className="text-base font-semibold">Tel: xxx-xxxx</h1>
+    return(
+        <div className="flex flex-col w-3/4 h-full items-center justify-center bg-color1 overflow-y-auto">
+            <div className="flex flex-col p-5 w-4/6 h-5/6 rounded-md bg-color2 bg-opacity-60 overflow-y-auto">
+            <h3 className="text-center text-base font-bold">Distribuidora de huevos el mono</h3>
+            {sucursal1.map((sucursal) => (
+                <div key={sucursal.Id_Sucursal}>
+                    <p className="text-center text-base font-bold">{sucursal.suc_direccion},{sucursal.suc_ciudad} - {sucursal.suc_nombre}</p>
+                    <p className="text-center text-base font-bold">{sucursal.suc_correo} - {sucursal.suc_telefono}</p>
                 </div>
-                <Formik
+            ))}
+            <Formik
                     initialValues={{
                         id_numero_identificacion: '',
-                        nuevo_cliente: {
+                        nuevo_proveedor: {
                             id_numero_identificacion: '',
-                            cli_nombre: '',
-                            cli_apellido: '',
-                            cli_telefono: '',
-                            cli_direccion: '',
-                            cli_tipo_identificacion: '',
-                            cli_ciudad: '',
+                            pro_nombre: '',
+                            pro_telefono: '',
+                            pro_direccion: '',
                         },
-                        fac_ven_descripcion: '',
-                        fac_ven_estado_entrega: '',
-                        fac_ven_metodo_pago: '',
-                        fac_ven_modo_entrega: '',
-                        fac_ven_total_pago: 0,
+                        fac_com_descripcion: '',
+                        fac_com_estado_entrega: '',
+                        fac_com_metodo_pago: '',
+                        fac_com_modo_entrega: '',
+                        fac_com_total_pago: 0,
                         productosform: [{
                             idProducto: '',
                             cantidad: '',
@@ -116,46 +117,32 @@ const RegistrarVenta = () => {
                     {({values, setValues, setFieldValue}) => (
                         <Form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
                             <div className="col-span-2">
-                                <label className="block mb-2 text-base text-black font-semibold">Seleccionar Cliente
+                                <label className="block mb-2 text-base text-black font-semibold">Seleccionar Proveedor
                                     Existente</label>
                                 <Field as="select"
                                        name='id_numero_identificacion'
                                        className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40">
-                                    <option value="">-- Seleccione un cliente --</option>
-                                    {clientes?.map((cliente, index) => (
+                                    <option value="">-- Seleccione un Proveedor --</option>
+                                    {proveedor?.map((proveedor, index) => (
                                         <option key={index}
-                                                value={cliente.id_numero_identificacion}>{cliente.id_numero_identificacion}</option>
+                                                value={proveedor.id_numero_identificacion}>{proveedor.id_numero_identificacion}</option>
                                     ))}
                                 </Field>
                             </div>
 
                             <div className="col-span-2">
-                                <h1 className="text-base font-bold">Datos Cliente Nuevo</h1>
+                                <h1 className="text-base font-bold">Datos Proveedor Nuevo</h1>
                             </div>
 
                             <div>
                                 <div>
                                     <label className="block mb-2 text-base text-black font-semibold">Nombre
-                                        Cliente</label>
+                                        Proveedor</label>
                                     <Field
                                         type="text"
-                                        id="nuevo_cliente.cli_nombre"
-                                        name="nuevo_cliente.cli_nombre"
-                                        placeholder="Nombre cliente"
-                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div>
-                                    <label className="block mb-2 text-base text-black font-semibold">Apellido
-                                        Cliente</label>
-                                    <Field
-                                        type="text"
-                                        id="nuevo_cliente.cli_apellido"
-                                        name="nuevo_cliente.cli_apellido"
-                                        placeholder="Apellido cliente"
+                                        id="nuevo_proveedor.pro_nombre"
+                                        name="nuevo_proveedor.pro_nombre"
+                                        placeholder="Nombre proveedor"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     />
                                 </div>
@@ -166,21 +153,9 @@ const RegistrarVenta = () => {
                                     Identificación</label>
                                 <div className="flex">
                                     <Field
-                                        as="select"
-                                        id="nuevo_cliente.cli_tipo_identificacion"
-                                        name="nuevo_cliente.cli_tipo_identificacion"
-                                        placeholder="xxxxxxxxxx"
-                                        className="block w-1/4 px-2 py-3 mt-2 mr-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-                                    >
-                                        <option value="">-- Identificación --</option>
-                                        <option value="CC">CC</option>
-                                        <option value="NIT">NIT</option>
-                                        <option value="TI">TI</option>
-                                    </Field>
-                                    <Field
                                         type="number"
-                                        id="nuevo_cliente.id_numero_identificacion"
-                                        name="nuevo_cliente.id_numero_identificacion"
+                                        id="nuevo_proveedor.id_numero_identificacion"
+                                        name="nuevo_proveedor.id_numero_identificacion"
                                         placeholder="xxxxxxxxxx"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     />
@@ -190,11 +165,11 @@ const RegistrarVenta = () => {
                             <div>
                                 <div>
                                     <label className="block mb-2 text-base text-black font-semibold">Teléfono
-                                        Cliente</label>
+                                        Proveedor</label>
                                     <Field
                                         type="number"
-                                        id="nuevo_cliente.cli_telefono"
-                                        name="nuevo_cliente.cli_telefono"
+                                        id="nuevo_proveedor.pro_telefono"
+                                        name="nuevo_proveedor.pro_telefono"
                                         placeholder="320XXXXXXX"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     />
@@ -203,26 +178,12 @@ const RegistrarVenta = () => {
 
                             <div>
                                 <div>
-                                    <label className="block mb-2 text-base text-black font-semibold">Dirección</label>
+                                    <label className="block mb-2 text-base text-black font-semibold">Dirección del proveedor</label>
                                     <Field
                                         type="text"
-                                        id="nuevo_cliente.cli_direccion"
-                                        name="nuevo_cliente.cli_direccion"
-                                        placeholder=""
-                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div>
-                                    <label className="block mb-2 text-base text-black font-semibold">Ciudad de
-                                        Residencia</label>
-                                    <Field
-                                        type="text"
-                                        id="nuevo_cliente.cli_ciudad"
-                                        name="nuevo_cliente.cli_ciudad"
-                                        placeholder="Villavicencio"
+                                        id="nuevo_proveedor.pro_direccion"
+                                        name="nuevo_proveedor.pro_direccion"
+                                        placeholder="Calle XXXX"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     />
                                 </div>
@@ -285,14 +246,14 @@ const RegistrarVenta = () => {
                                     </div>
                                     <div>
                                         <label htmlFor={`productosform.${index}.precioTotal`}
-                                               className="block text-sm font-semibold mb-2">
+                                               className="block mb-2 text-base text-black font-semibold">
                                             Precio Total:
                                         </label>
                                         <Field
                                             type="text"
                                             id={`productosform.${index}.precioTotal`}
                                             name={`productosform.${index}.precioTotal`}
-                                            value={product.precioTotal}
+                                            value={product.cantidad * product.precioUnitario}
                                             className="w-full p-2 border border-gray-300 rounded"
                                             readOnly
                                         />
@@ -355,8 +316,8 @@ const RegistrarVenta = () => {
                                         name="fac_ven_estado_entrega"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     >
-                                        <option value="1">Si</option>
-                                        <option value="0">No</option>
+                                        <option value="tienda">Si</option>
+                                        <option value="domicilio">No</option>
                                     </Field>
                                 </div>
                             </div>
@@ -373,7 +334,7 @@ const RegistrarVenta = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mb-4 col-span-1 col-start-2">
                                 <label htmlFor="fac_ven_total_pago" className="block text-sm font-semibold mb-2">
                                     Total General:
                                 </label>
@@ -381,7 +342,7 @@ const RegistrarVenta = () => {
                                     type="text"
                                     id="fac_ven_total_pago"
                                     name="fac_ven_total_pago"
-                                    value={values.fac_ven_total_pago}
+                                    value={values.productosform.reduce((total, product) => total + (product.cantidad * product.precioUnitario), 0)}
                                     className="w-full p-2 border border-gray-300 rounded"
                                     readOnly
                                 />
@@ -397,7 +358,7 @@ const RegistrarVenta = () => {
                 </Formik>
             </div>
         </div>
-    )
+    );
 }
 
-export default RegistrarVenta;
+export default RegistroCompra;
