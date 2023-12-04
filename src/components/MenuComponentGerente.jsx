@@ -27,7 +27,9 @@ function Menu() {
                     </Link>
                 </button>
                 <button className="w-full border-1 rounded-md text-black bg-opacity-60 bg-color1 mb-4 px-5 py-3 hover:bg-color1 hover:text-white">
-                    <span className="btm-nav-label">Registrar compra</span>
+                    <Link to="registrocompra">
+                        <span className="btm-nav-label">Registrar compra</span>
+                    </Link>
                 </button>
             </div>
         </aside>

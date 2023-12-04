@@ -62,9 +62,34 @@ app.get("/api/clientes", (req, res) => {
         }
     });
 });
-// Consultar una vista
+
 app.get("/api/sucursal1", (req, res) => {
     db_elmono.query('SELECT * FROM vw_info_sucursal_1', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+
+// llamamos la vista para ver los productos de gasto disponibles
+app.get("/api/productosgasto", (req, res) => {
+    db_elmono.query('SELECT * FROM vw_productos_gasto_registrados', (err, results) => {
+        if (err) {
+            console.error('Error al consultar la vista', err);
+            res.status(500).json({error: 'Error al consultar la vista'});
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// llamamos la vista para ver los proveedores
+app.get("/api/proveedor", (req, res) => {
+    db_elmono.query('SELECT * FROM vw_proveedores_registrados', (err, results) => {
         if (err) {
             console.error('Error al consultar la vista', err);
             res.status(500).json({error: 'Error al consultar la vista'});

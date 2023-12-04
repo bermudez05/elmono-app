@@ -2,10 +2,11 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-function RegistroGasto() {
+function RegistroCompra() {
 
     const [sucursal1, setSucursal1] = useState([])
-    const [productosgasto, setProductosGasto] = useState([]);
+    const [proveedor, setProveedor] = useState([]);
+    const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
 
 
@@ -19,9 +20,18 @@ function RegistroGasto() {
             .catch((error) => {
                 console.error('Error al obtener datos:', error);
             });
-        axios.get('http://localhost:3001/api/productosgasto')
+        axios.get('http://localhost:3001/api/proveedor')
             .then((response) => {
-                setProductosGasto(response.data);
+                setProveedor(response.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Error al obtener datos:', error);
+                setLoading(false);
+            });
+        axios.get('http://localhost:3001/api/productosfactura')
+            .then((response) => {
+                setProductos(response.data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -84,11 +94,17 @@ function RegistroGasto() {
             <Formik
                     initialValues={{
                         id_numero_identificacion: '',
-                        fac_gasto_descripcion: '',
-                        fac_gasto_estado_entrega: '',
-                        fac_gasto_metodo_pago: '',
-                        fac_gasto_modo_entrega: '',
-                        fac_gasto_total_pago: 0,
+                        nuevo_proveedor: {
+                            id_numero_identificacion: '',
+                            pro_nombre: '',
+                            pro_telefono: '',
+                            pro_direccion: '',
+                        },
+                        fac_com_descripcion: '',
+                        fac_com_estado_entrega: '',
+                        fac_com_metodo_pago: '',
+                        fac_com_modo_entrega: '',
+                        fac_com_total_pago: 0,
                         productosform: [{
                             idProducto: '',
                             cantidad: '',
@@ -96,9 +112,83 @@ function RegistroGasto() {
                             precioTotal: 0
                         }],
                     }}
-                    onSubmit={handleSubmitRegistrar}>
+                    onSubmit={handleSubmitRegistrar}
+                >
                     {({values, setValues, setFieldValue}) => (
                         <Form className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
+                            <div className="col-span-2">
+                                <label className="block mb-2 text-base text-black font-semibold">Seleccionar Proveedor
+                                    Existente</label>
+                                <Field as="select"
+                                       name='id_numero_identificacion'
+                                       className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40">
+                                    <option value="">-- Seleccione un Proveedor --</option>
+                                    {proveedor?.map((proveedor, index) => (
+                                        <option key={index}
+                                                value={proveedor.id_numero_identificacion}>{proveedor.id_numero_identificacion}</option>
+                                    ))}
+                                </Field>
+                            </div>
+
+                            <div className="col-span-2">
+                                <h1 className="text-base font-bold">Datos Proveedor Nuevo</h1>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <label className="block mb-2 text-base text-black font-semibold">Nombre
+                                        Proveedor</label>
+                                    <Field
+                                        type="text"
+                                        id="nuevo_proveedor.pro_nombre"
+                                        name="nuevo_proveedor.pro_nombre"
+                                        placeholder="Nombre proveedor"
+                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block mb-2 text-base text-black font-semibold">No.
+                                    Identificación</label>
+                                <div className="flex">
+                                    <Field
+                                        type="number"
+                                        id="nuevo_proveedor.id_numero_identificacion"
+                                        name="nuevo_proveedor.id_numero_identificacion"
+                                        placeholder="xxxxxxxxxx"
+                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <label className="block mb-2 text-base text-black font-semibold">Teléfono
+                                        Proveedor</label>
+                                    <Field
+                                        type="number"
+                                        id="nuevo_proveedor.pro_telefono"
+                                        name="nuevo_proveedor.pro_telefono"
+                                        placeholder="320XXXXXXX"
+                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <label className="block mb-2 text-base text-black font-semibold">Dirección del proveedor</label>
+                                    <Field
+                                        type="text"
+                                        id="nuevo_proveedor.pro_direccion"
+                                        name="nuevo_proveedor.pro_direccion"
+                                        placeholder="Calle XXXX"
+                                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                                    />
+                                </div>
+                            </div>
+
                             <div className="col-span-2">
                                 <h1 className="text-base font-bold">Productos</h1>
                             </div>
@@ -117,14 +207,13 @@ function RegistroGasto() {
                                             className="w-full p-2 border border-gray-300 rounded"
                                         >
                                             <option value="">-- Seleccione el Producto --</option>
-                                            {productosgasto?.map((producto, index) => (
+                                            {productos?.map((producto, index) => (
                                                 <option key={index}
-                                                        value={producto.Id_Producto_Gasto}>{producto.pro_nombre}</option>
+                                                        value={producto.Id_ProductoTienda}>{producto.pro_nombre}</option>
                                             ))}
 
                                         </Field>
                                     </div>
-
                                     <div className="mx-3">
                                         <label htmlFor={`productosform.${index}.cantidad`}
                                                className="block mb-2 text-base text-black font-semibold">
@@ -272,4 +361,4 @@ function RegistroGasto() {
     );
 }
 
-export default RegistroGasto;
+export default RegistroCompra;

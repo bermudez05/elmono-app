@@ -8,6 +8,7 @@ import TenderoPage from "./pages/TenderoPage";
 import FacturasView from "./pages/FacturasPage";
 import RegistrarVenta from "./pages/RegistrarVentaPage";
 import RegistroGasto from "./pages/RegistroGasto";
+import RegistroCompra from "./pages/RegistroCompra";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/gerente" element={<GerentePage/>}>
                         <Route path={"productos"} element={<ProductsView/>}/>
                         <Route path={"registrogasto"} element={<RegistroGasto/>}/>
+                        <Route path={"registrocompra"} element={<RegistroCompra/>}/>
                     </Route>
                     <Route path="/tendero" element={<TenderoPage/>}>
                         <Route path={"productos"} element={<ProductsView/>}/>
