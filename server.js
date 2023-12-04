@@ -12,7 +12,7 @@ const db_elmono = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     // Aquí va la contraseña de tu mysql
-    password: 'BiteMe_2002',
+    password: '4Br6gyp63P27',
     database: 'bd_proyecto_tienda',
 });
 
@@ -151,3 +151,99 @@ app.put('/api/updateDeliveryStatus/:facturaId', (req, res) => {
         }
     });
 });
+
+
+app.post('/api/registrarFacturaVenta', async (req, res) => {
+    try {
+        const {
+            id_numero_identificacion,
+            nuevo_cliente,
+            fac_ven_descripcion,
+            fac_ven_estado_entrega,
+            fac_ven_metodo_pago,
+            fac_ven_modo_entrega,
+            productosform
+        } = req.body;
+
+        const fac_ven_total_pago = productosform.reduce((total, product) => total + (product.cantidad * product.precioUnitario), 0)
+
+        let clienteId;
+
+        if (id_numero_identificacion) {
+            clienteId = id_numero_identificacion;
+        } else if (nuevo_cliente.id_numero_identificacion) {
+            // Registrar el nuevo cliente y obtener su ID
+            const clienteResults = await registrarNuevoCliente(nuevo_cliente);
+            clienteId = clienteResults.insertId;
+        }
+
+        // Registrar la factura y obtener su ID
+        const facturaResults = await registrarFactura(fac_ven_total_pago, fac_ven_modo_entrega, fac_ven_metodo_pago, fac_ven_descripcion, fac_ven_estado_entrega, clienteId, 1000000001);
+
+        const nuevaFacturaId = facturaResults.insertId;
+
+        // Registrar los detalles de la factura
+        await Promise.all(productosform.map(producto => registrarDetalleFactura(nuevaFacturaId, producto)));
+
+        res.json({message: 'Factura de venta registrada correctamente'});
+    } catch (error) {
+        console.error('Error al registrar la factura de venta:', error);
+        res.status(500).json({error: 'Error al registrar la factura de venta'});
+    }
+});
+
+async function registrarNuevoCliente(nuevoCliente) {
+    return new Promise((resolve, reject) => {
+        db_elmono.query(
+            'CALL sp_RegistrarCliente(?, ?, ?, ?, ?, ?, ?)',
+            [
+                nuevoCliente.id_numero_identificacion,
+                nuevoCliente.cli_nombre,
+                nuevoCliente.cli_apellido,
+                nuevoCliente.cli_telefono,
+                nuevoCliente.cli_direccion,
+                nuevoCliente.cli_tipo_identificacion,
+                nuevoCliente.cli_ciudad
+            ],
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    });
+}
+
+async function registrarFactura(...facturaParams) {
+    return new Promise((resolve, reject) => {
+        db_elmono.query(
+            'INSERT INTO FACTURA_VENTA (fac_ven_fecha, fac_ven_total_pago, fac_ven_modo_entrega, fac_ven_metodo_pago, fac_ven_descripcion, fac_ven_estado_entrega, CLIENTE_id_numero_identificacion, EMPLEADO_Id_Empleado) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?)',
+            facturaParams,
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    });
+}
+
+async function registrarDetalleFactura(nuevaFacturaId, producto) {
+    return new Promise((resolve, reject) => {
+        db_elmono.query(
+            'CALL sp_RegistrarDetalleFacturaVenta(?, ?, ?, ?)',
+            [nuevaFacturaId, producto.idProducto, producto.cantidad, producto.precioUnitario],
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    });
+}
