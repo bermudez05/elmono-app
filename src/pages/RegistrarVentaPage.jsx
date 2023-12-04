@@ -49,7 +49,14 @@ const RegistrarVenta = () => {
     };
 
     const handleSubmitRegistrar = (values) => {
-        console.log('Form submit values:', values)
+        console.log('Form submit values:', values);
+        axios.post('http://localhost:3001/api/registrarFacturaVenta', values)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error al registrar la factura:', error);
+            });
     };
 
 
@@ -310,8 +317,8 @@ const RegistrarVenta = () => {
                                         name="fac_ven_estado_entrega"
                                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                                     >
-                                        <option value="tienda">Si</option>
-                                        <option value="domicilio">No</option>
+                                        <option value="1">Si</option>
+                                        <option value="0">No</option>
                                     </Field>
                                 </div>
                             </div>
