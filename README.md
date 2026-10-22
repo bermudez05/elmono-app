@@ -64,6 +64,7 @@ REST endpoints include `/api/productos`, `/api/productosfactura`, `/api/clientes
 └── public/
 ```
 
-## Author
+## Team
 
-**Laura Nicole Bermúdez Santa**, Universidad Nacional de Colombia · [GitHub](https://github.com/bermudez05)
+- **Laura Nicole Bermúdez Santa** · [@bermudez05](https://github.com/bermudez05)
+- **Nicolás Álvarez Triana** · [@niclasDc](https://github.com/niclasDc)
