@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# El Mono App: Store Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> A full-stack management system for **El Mono**, a neighbourhood store in Villavicencio, Colombia. It automates inventory, sales, purchases, expenses and customer and supplier records on a relational MySQL database designed from scratch.
 
-## Available Scripts
+![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
 
-In the project directory, you can run:
+Final project for *Bases de Datos* (Databases), Universidad Nacional de Colombia.
 
-### `npm start`
+## Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Small stores often track stock, sales and expenses by hand. El Mono App replaces that with a role-based web interface on top of a normalised MySQL database:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Store clerk (tendero):** browse products in stock and register sales and invoices.
+- **Manager (gerente):** register purchases from suppliers and business expenses, and review sales invoices, inventory, customers and suppliers.
 
-### `npm test`
+## Database design
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The database (`BD_Proyecto_Tienda`) is the core of the project. All scripts are in [`MYSQL-SCRIPTS/`](MYSQL-SCRIPTS/).
 
-### `npm run build`
+| Layer | What's included |
+|---|---|
+| **Schema** | 18 tables: customers, branches, employees & schedules, store products & batches (`LOTE`), sales / purchase / expense invoices with line items, suppliers, payment methods (bank and mobile transfers) |
+| **Views** | Products in stock, current inventory, inventory entries and exits, opening balance, registered sales invoices, customers, suppliers, expense products |
+| **Stored procedures** | Register sales, purchases, expenses and their line items; register customers; update delivery status and payment method; assign employee schedules |
+| **Functions** | Invoice totals, total sales and invoice count per period, average invoice value |
+| **Triggers** | Audit log of deleted sales and purchase invoices and their line items |
+| **Security** | Roles and permissions for `gerente`, `tendero` and `domiciliario` (delivery) |
+| **Performance** | Indexes on frequent query paths |
+| **Data** | Seed data, sample queries, update and delete scripts |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Architecture
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+React (Formik + Yup forms, React Router, Tailwind)  ──axios──▶  Express API (server.js, :3001)  ──▶  MySQL views & procedures
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+REST endpoints include `/api/productos`, `/api/productosfactura`, `/api/clientes`, `/api/proveedor`, `/api/productosgasto` and `/api/facturasventas`.
 
-### `npm run eject`
+## Getting started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Prerequisites:** Node.js 18+ and MySQL 8.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Create the database by running the scripts in `MYSQL-SCRIPTS/` in this order: creation → data insertion → views → procedures & functions → triggers → indexes → users & roles.
+2. Set your MySQL credentials in `server.js`.
+3. Install the dependencies and start both servers:
+   ```bash
+   npm install
+   node server.js      # API on http://localhost:3001
+   npm start           # UI on http://localhost:3000
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Project structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+├── MYSQL-SCRIPTS/     # schema, views, procedures, functions, triggers, indexes, roles, seed data
+├── server.js          # Express REST API over MySQL
+├── src/
+│   ├── components/    # layout and role-specific menus (manager / clerk)
+│   └── pages/         # products, sales, purchases, expenses, invoices
+└── public/
+```
 
-## Learn More
+## Author
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Laura Nicole Bermúdez Santa**, Universidad Nacional de Colombia · [GitHub](https://github.com/bermudez05)
